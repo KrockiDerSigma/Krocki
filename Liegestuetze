@@ -7,7 +7,7 @@ local Window = OrionLib:MakeWindow({
         Name = "QuantumHub - AutoRob",
         HidePremium = false,
         SaveConfig = false,
-        IntroText = "Quantum AutoRob | V1.7.3 - by nytheron"
+        IntroText = "Quantum AutoRob | V1.7.4 - by nytheron"
 })
 
 --  // Tabs \\ --
@@ -18,12 +18,38 @@ local AutoRobTab = Window:MakeTab({
     PremiumOnly = false,
 })
 
+local InfosTab = Window:MakeTab({
+    Name = "Infos",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false,
+})
+
 --// Sections \\ --
 
 local Section1 = AutoRobTab:AddSection({
     Name = "AutoRob",
 })
+local Section = InfosTab:AddSection({
+    Name = 'General'
+})
 
+AutoRobTab:AddLabel('Please read "Infos" before starting AutoRob!')
+
+InfosTab:AddLabel("If you got the problem that it buys much bombs, please dont\nopen a ticket. Im working on it!")
+InfosTab:AddLabel("If its stopping then just reexecute then it should working\nagain, it must be a error from your executor!")
+InfosTab:AddLabel("If you got any other problems, please open a ticket in the\nDiscord Server:")
+InfosTab:AddButton({
+	Name = "Copy Discord",
+	Callback = function()
+		setclipboard("https://discord.gg/https://discord.gg/9mFj4UMJPU")
+		OrionLib:MakeNotification({
+			Name = "Discord Server",
+			Content = "Discord Server link copied to clipboard!",
+			Image = "rbxassetid://4483345998",
+			Time = 5
+		})
+	end
+})
 -- // Autofarm \\ --
 local configFileName = "Quantum_config5.json"
 
