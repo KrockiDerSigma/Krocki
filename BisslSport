@@ -1,7 +1,7 @@
 
 if game.PlaceId == 7711635737 then
 
-task.wait(1)
+task.wait(0.5)
 
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/1nig1htmare1234/SCRIPTS/refs/heads/main/Orion.lua')))()
 local Window = OrionLib:MakeWindow({
