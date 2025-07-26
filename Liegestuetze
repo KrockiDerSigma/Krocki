@@ -36,7 +36,7 @@ local Section = InfosTab:AddSection({
 AutoRobTab:AddLabel('Please read "Infos" before starting AutoRob!')
 
 InfosTab:AddLabel("If you got the problem that it buys much bombs, please dont\nopen a ticket. Im working on it!")
-InfosTab:AddLabel("If its stopping then just reexecute then it should working\nagain, it must be a error from your executor!")
+InfosTab:AddLabel("If its stopping then just reexecute then it should working\nagain, it must be an error from your executor!")
 InfosTab:AddLabel("If you got any other problems, please open a ticket in the\nDiscord Server:")
 InfosTab:AddButton({
 	Name = "Copy Discord",
