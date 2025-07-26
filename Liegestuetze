@@ -100,6 +100,8 @@ AutoRobTab:AddToggle({
 		saveConfig()
 	end    
 })
+
+-- Events 
 local plr = game:GetService("Players").LocalPlayer
 local EquipRemoteEvent = game:GetService("ReplicatedStorage")["Bnl"]["d883ecf6-ecda-4c56-9855-893c1cf13308"]
 local buyRemoteEvent = game:GetService("ReplicatedStorage")["Bnl"]["0e9e7359-465e-44b1-82c2-40bd8c2ee546"]
@@ -619,8 +621,7 @@ task.wait(0.5)
 tool = plr.Character:FindFirstChild("Bomb")
 tool = plr.Character:FindFirstChild("Bomb")
 if tool then
-SpawnBomb()
-
+    SpawnBomb()
 else
     warn("Tool 'Bomb' not found in the Backpack!")
 end
@@ -714,7 +715,6 @@ hasBomb1 = checkContainer(plr.Backpack) or checkContainer(plr.Character)
 tool = plr.Character:FindFirstChild("Bomb")
 if tool then
 	SpawnBomb()
-
 else
     warn("Tool 'Bomb' not found in the Backpack!")
 end
@@ -894,7 +894,7 @@ end
 else
 	game.StarterGui:SetCore("SendNotification", {
 		Title = "Container2 not open",
-		Text = "Hopping Server",
+		Text = "Hopping Server :^)",
 	})
 end
 
