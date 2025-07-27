@@ -1,14 +1,14 @@
 
 if game.PlaceId == 7711635737 then
 
-task.wait(0.5)
+task.wait(1)
 
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/1nig1htmare1234/SCRIPTS/refs/heads/main/Orion.lua')))()
 local Window = OrionLib:MakeWindow({
         Name = "QuantumHub",
         HidePremium = false,
         SaveConfig = false,
-        IntroText = "Quantum | V1.7.5 - by nytheron",
+        IntroText = "Quantum | V1.7.6 - by nytheron",
 })
 
 
@@ -1640,7 +1640,7 @@ function fireTaser()
     if target then
         local pos = calculatePrediction(target)
         if not pos then return end
-        game:GetService("ReplicatedStorage"):WaitForChild("Bnl"):WaitForChild("69141aa3-8c6a-4eee-ab58-c7805873c0ee"):FireServer(
+        game:GetService("ReplicatedStorage"):WaitForChild("Bnl"):WaitForChild("c6011f40-2809-4686-a297-33283dd11715"):FireServer(
             LocalPlayer.Character.Taser,
             pos,
             (pos - LocalPlayer.Character.HumanoidRootPart.Position).Unit
