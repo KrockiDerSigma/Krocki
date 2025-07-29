@@ -2126,9 +2126,17 @@ MiscTab:AddLabel("losing your stuff if resetting character")
 MiscTab:AddButton({
 	Name = "Reset Character",
 	Callback = function()
-    game:GetService("ReplicatedStorage"):WaitForChild("4DE"):WaitForChild("5b377e54-4be6-4911-9b91-bb81fc34c592"):FireServer()
-
-
+        local player = game.Players.LocalPlayer
+        if player.Character then
+            player.Character:BreakJoints()
+            wait(0.1)
+            player.Character:Destroy()
+        end
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "Quantum",
+            Text = "Character reset successfully",
+            Duration = 5
+        })
   	end    
 })
 
