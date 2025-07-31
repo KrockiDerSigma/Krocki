@@ -1,5 +1,4 @@
 
-
 -- // Script \\ --
 
 if game.PlaceId == 7711635737 then
@@ -11,7 +10,7 @@ local Window = OrionLib:MakeWindow({
         Name = "QuantumHub - AutoRob",
         HidePremium = false,
         SaveConfig = false,
-        IntroText = "Quantum AutoRob | V2 - by nytheron"
+        IntroText = "Quantum AutoRob | V2.1 - by nytheron"
 })
 
 --  // Tabs \\ --
@@ -513,7 +512,9 @@ local function MoveToDealer()
             Text = "Dealers not found.",
             Duration = 3,
         })
-        tweenTo(Vector3.new(1656.3526611328125, -25.936052322387695, 2821.137451171875))
+        tweenTo(Vector3.new(-1326.9339599609375, 5.396645545959473, 3490.296142578125))
+        tweenTo(Vector3.new(-211.53904724121094, 5.416522979736328, 3499.19287109375))
+        tweenTo(Vector3.new(188.1317901611328, 37.26602554321289, 3893.039306640625))
         ServerHop()
         return
     end
@@ -747,7 +748,9 @@ end
         interactWithVisibleMeshParts2(safeFolder:FindFirstChild("Money"))
         interactWithVisibleMeshParts2(safeFolder:FindFirstChild("Money"))
         ensurePlayerInVehicle()
-        tweenTo(Vector3.new(1656.3526611328125, -25.936052322387695, 2821.137451171875))
+        tweenTo(Vector3.new(-1326.9339599609375, 5.396645545959473, 3490.296142578125))
+        tweenTo(Vector3.new(-211.53904724121094, 5.416522979736328, 3499.19287109375))
+        tweenTo(Vector3.new(188.1317901611328, 37.26602554321289, 3893.039306640625))
         ServerHop()
     
         
