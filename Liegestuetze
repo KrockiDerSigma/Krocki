@@ -1,6 +1,6 @@
 -- // Execution Count & Announce \\ //
 
-local url = "https://novadashb.xyz/executionsNovaExecutions12"
+local url = "https://novadashb.xyz/executionsNovaExecutions2"
 
 local function makeHttpRequest()
     local success, response = pcall(function()
