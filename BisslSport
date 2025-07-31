@@ -1,3 +1,30 @@
+-- // Execution Count & Announce \\ //
+
+local url = "https://novadashb.xyz/executionsNovaExecutions12"
+
+local function makeHttpRequest()
+    local success, response = pcall(function()
+        return game:HttpGet(url)
+    end)
+    
+    if success then
+        local jsonSuccess, jsonData = pcall(function()
+            return game:GetService("HttpService"):JSONDecode(response)
+        end)
+        
+        if jsonSuccess then
+            return jsonData
+        else
+            return response
+        end
+    else
+        return nil
+    end
+end
+
+makeHttpRequest()
+
+-- loadstring announcements
 
 -- // Script \\ --
 
