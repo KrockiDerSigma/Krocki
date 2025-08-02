@@ -29,8 +29,6 @@ makeHttpRequest()
 -- // Script \\ --
 
 
-task.wait(1)
-
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/1nig1htmare1234/SCRIPTS/refs/heads/main/Orion.lua')))()
 local Window = OrionLib:MakeWindow({
         Name = "QuantumHub",
