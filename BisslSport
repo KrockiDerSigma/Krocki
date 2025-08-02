@@ -28,7 +28,6 @@ makeHttpRequest()
 
 -- // Script \\ --
 
-if game.PlaceId == 7711635737 then
 
 task.wait(1)
 
