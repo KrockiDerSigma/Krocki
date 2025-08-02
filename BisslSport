@@ -34,7 +34,7 @@ local Window = OrionLib:MakeWindow({
         Name = "QuantumHub",
         HidePremium = false,
         SaveConfig = false,
-        IntroText = "Quantum | V1.8 - by nytheron",
+        IntroText = "Quantum | V1.8.1 - by nytheron",
 })
 
 
