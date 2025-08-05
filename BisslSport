@@ -1411,57 +1411,43 @@ local cityRotations = {
     [15] = 180
 }
 
+-- City Waypoints
 local cityWaypoints = {
     [1] = { Vector3.new(-235.2529, 9.9398, 1303.6300) }, -- 1 → 2
-
-    [2] = { -- 2 → 3, 1. und 2. Waypoint 15 Studs tiefer, 5. Waypoint entfernt
+    [2] = { -- 2 → 3
         Vector3.new(-8.3575, 51.9614, 1780.4568),
         Vector3.new(-126.5800, 43.5866, 2003.7891),
         Vector3.new(-274.6644, 9.9315, 2122.2737),
         Vector3.new(-625.2094, 5.6226, 2707.7380),
         Vector3.new(-1018.3108, 34.6537, 3128.8110)
     },
-
-    [4] = { -- 4 → 5, 1. Waypoint 15 Studs tiefer, 3. Waypoint entfernt
+    [4] = { -- 4 → 5
         Vector3.new(-1597.2870, 48.7350, 3594.4456),
         Vector3.new(-1629.9850, 39.4920, 3685.6567)
     },
-
     [6] = { -- 6 → 7
         Vector3.new(-762.0945, 5.6180, 3897.3623),
         Vector3.new(-714.2070, 51.7027, 3837.8560),
         Vector3.new(-542.8757, 37.4905, 3746.7854),
         Vector3.new(-396.3587, 5.6328, 3691.5720)
     },
-
-    [7] = { -- 7 → 8
-        Vector3.new(-713.9056, 10.1624, 2831.1653),
-        Vector3.new(-635.5913, 54.5318, 2961.9038),
-        Vector3.new(-442.5694, 57.7715, 3263.4375),
-        Vector3.new(-404.3798, 53.0088, 3426.5686),
-        Vector3.new(-355.9079, 41.4247, 3568.6230)
+    [7] = { -- 7 → 8 (reverse of 6 → 7)
+        Vector3.new(-396.3587, 5.6328, 3691.5720),
+        Vector3.new(-542.8757, 37.4905, 3746.7854),
+        Vector3.new(-714.2070, 51.7027, 3837.8560),
+        Vector3.new(-762.0945, 5.6180, 3897.3623)
     },
-
-    [8] = { -- 8 → 9 (reverse of 7 → 8, without last waypoint)
-        Vector3.new(-404.3798, 53.0088, 3426.5686),
-        Vector3.new(-442.5694, 57.7715, 3263.4375),
-        Vector3.new(-635.5913, 54.5318, 2961.9038),
-        Vector3.new(-713.9056, 10.1624, 2831.1653)
-    },
-
-    [9] = { -- 9 → 10 (reverse von 4 → 5)
+    [9] = { -- 9 → 10 (reverse of 4 → 5)
         Vector3.new(-1629.9850, 39.4920, 3685.6567),
         Vector3.new(-1597.2870, 48.7350, 3594.4456)
     },
-
-    [11] = { -- 11 → 12 (reverse von 2 → 3, mit letztem Punkt zuerst)
+    [11] = { -- 11 → 12 (reverse of 2 → 3)
         Vector3.new(-1018.3108, 34.6537, 3128.8110),
         Vector3.new(-625.2094, 5.6226, 2707.7380),
         Vector3.new(-274.6644, 9.9315, 2122.2737),
         Vector3.new(-126.5800, 43.5866, 2003.7891),
         Vector3.new(-8.3575, 51.9614, 1780.4568)
     },
-
     [12] = { Vector3.new(-235.2529, 9.9398, 1303.6300) } -- 12 → 13
 }
 
@@ -1513,7 +1499,7 @@ local ruralWaypoints = {
         Vector3.new(-404.3798, 53.0088, 3426.5686),
         Vector3.new(-355.9079, 41.4247, 3568.6230)
     },
-    [8] = { -- 8 → 9 (reverse of 7 → 8, without last waypoint)
+    [8] = { -- 8 → 9
         Vector3.new(-404.3798, 53.0088, 3426.5686),
         Vector3.new(-442.5694, 57.7715, 3263.4375),
         Vector3.new(-635.5913, 54.5318, 2961.9038),
@@ -1635,23 +1621,14 @@ local function runAutoFarm()
             local success = tweenTo(stations[i])
             if not success then break end
 
-            if i == 1 then
-                task.wait(3)
-            else
-                task.wait(4)
-            end
+            task.wait(i == 1 and 3 or 4)
 
             if waypoints[i] then
                 if not tweenThroughPoints(waypoints[i]) then break end
             end
 
-            if i < #stations then
-                local rotation = rotations[i + 1] or 0
-                if rotation ~= 0 then currentYaw = currentYaw + math.rad(rotation) end
-            else
-                local rotation = rotations[#stations + 1] or 0
-                if rotation ~= 0 then currentYaw = currentYaw + math.rad(rotation) end
-            end
+            local rotation = rotations[i + 1] or 0
+            if rotation ~= 0 then currentYaw = currentYaw + math.rad(rotation) end
         end
     end
 end
@@ -2280,7 +2257,7 @@ local HRP = Character:WaitForChild("HumanoidRootPart")
 local Humanoid = Character:WaitForChild("Humanoid")
 
 local SpeedhackEnabled = false
-local SpeedMultiplier = 1.3 -- default 1.3x
+local SpeedMultiplier = 1.2 -- default 1.2x
 
 MiscTab:AddLabel("Press T to toggle Speedhack")
 
