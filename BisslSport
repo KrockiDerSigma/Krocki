@@ -37,7 +37,7 @@ local Window = OrionLib:MakeWindow({
         Name = "QuantumHub",
         HidePremium = false,
         SaveConfig = false,
-        IntroText = "Quantum | V1.8.1 - by nytheron",
+        IntroText = "Quantum | V1.9 - by nytheron",
 })
 
 
@@ -591,21 +591,12 @@ CreditsTab:AddLabel("Credits to our Dev Lukas.")
 CreditsTab:AddLabel("Made by nytheron.")
 
 -- -- // Visuals Tab \\ --
--- Lokale Variablen für Layout
-local nameLabelHeight = 11
-local displayNameLabelHeight = 11.5
-local distanceLabelHeight = 11.5
-local jobLabelHeight = 11.5
-local wantedLabelHeight = 10
-local healthBarWidth = 60
-local healthBarHeight = 6
 local elementSpacing = 2
-local maxDistance = 1000 -- Maximale Distanz in Studs, nach der das ESP ausgeblendet wird
+local healthBarHeight = 5
+local maxDistance = 1000
 
--- Tabelle, um die aktuellen ESPs zu verfolgen
 local espTable = {}
 
--- Farbzuweisung für Jobs
 local jobColors = {
     Police = Color3.fromRGB(0, 0, 255),
     ADAC = Color3.fromRGB(255, 165, 0),
@@ -616,38 +607,30 @@ local jobColors = {
     TruckCompany = Color3.fromRGB(0, 100, 0)
 }
 
--- Sichtbarkeitsstatus der ESP-Elemente
 local espVisibility = {
-    DisplayName = true,
-    Name = true,
-    HealthBar = true,
-    Distance = true,
-    Job = true,
-    Wanted = true
+    DisplayName = false,
+    Name = false,
+    HealthBar = false,
+    Distance = false,
+    Job = false,
+    Wanted = false,
+    Chams = false
 }
 
--- Cache der Spielservices
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local LocalPlayer = Players.LocalPlayer
-
--- Hilfsfunktion zum Erstellen von TextLabels
-local function createTextLabel(parent, name, size, position, textColor, font, textSize)
+local function createTextLabel(parent, name, textColor, font, textSize)
     local label = Instance.new("TextLabel")
     label.Name = name
     label.Parent = parent
-    label.Size = size
-    label.Position = position
     label.BackgroundTransparency = 1
     label.TextColor3 = textColor
     label.Font = font
     label.TextSize = textSize
     label.TextStrokeTransparency = 0
     label.Text = ""
+    label.Size = UDim2.new(1, 0, 0, textSize + 2)
     return label
 end
 
--- Funktion zum Erstellen des ESP für einen Spieler
 local function createESP(player, jobName)
     if player == LocalPlayer then return end
     if espTable[player] then return end
@@ -658,137 +641,165 @@ local function createESP(player, jobName)
     local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
     if not humanoidRootPart then return end
 
-    -- BillboardGui erstellen
     local billboard = Instance.new("BillboardGui")
     billboard.Adornee = humanoidRootPart
-    billboard.Size = UDim2.new(0, 200, 0, displayNameLabelHeight + nameLabelHeight + distanceLabelHeight + jobLabelHeight + healthBarHeight + (elementSpacing * 5))
+    billboard.Size = UDim2.new(0, 180, 0, 100)
     billboard.StudsOffset = Vector3.new(0, 3, 0)
     billboard.AlwaysOnTop = true
 
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(1, 0, 1, 0)
+    frame.Size = UDim2.new(1,0,1,0)
     frame.BackgroundTransparency = 1
     frame.Parent = billboard
 
-    -- TextLabels erstellen
-    local displayNameLabel = createTextLabel(frame, "DisplayNameLabel", UDim2.new(1, 0, 0, displayNameLabelHeight), UDim2.new(0, 0, 0, 0), Color3.fromRGB(255, 255, 255), Enum.Font.SourceSansBold, 16)
-    local nameLabel = createTextLabel(frame, "NameLabel", UDim2.new(1, 0, 0, nameLabelHeight), UDim2.new(0, 0, 0, displayNameLabelHeight + elementSpacing), Color3.fromRGB(255, 255, 255), Enum.Font.SourceSansBold, 16)
-    local distanceLabel = createTextLabel(frame, "DistanceLabel", UDim2.new(1, 0, 0, distanceLabelHeight), UDim2.new(0, 0, 0, displayNameLabelHeight + nameLabelHeight + elementSpacing * 2), Color3.fromRGB(255, 255, 255), Enum.Font.SourceSansBold, 16)
-    local jobLabel = createTextLabel(frame, "JobLabel", UDim2.new(1, 0, 0, jobLabelHeight), UDim2.new(0, 0, 0, displayNameLabelHeight + nameLabelHeight + distanceLabelHeight + elementSpacing * 3), Color3.fromRGB(255, 255, 0), Enum.Font.SourceSansBold, 16)
-    local wantedLabel = createTextLabel(frame, "WantedLabel", UDim2.new(1, 0, 0, jobLabelHeight), UDim2.new(0, 0, 0, displayNameLabelHeight + nameLabelHeight + distanceLabelHeight + wantedLabelHeight + wantedLabelHeight + elementSpacing * 3), Color3.fromRGB(255, 217, 0), Enum.Font.SourceSansBold, 16)
+    local displayNameLabel = createTextLabel(frame, "DisplayNameLabel", Color3.fromRGB(255,255,255), Enum.Font.SourceSansBold, 14)
+    local nameLabel = createTextLabel(frame, "NameLabel", Color3.fromRGB(255,255,255), Enum.Font.SourceSansBold, 13)
+    local distanceLabel = createTextLabel(frame, "DistanceLabel", Color3.fromRGB(255,255,255), Enum.Font.SourceSansBold, 12)
+    local jobLabel = createTextLabel(frame, "JobLabel", Color3.fromRGB(255,255,0), Enum.Font.SourceSansBold, 12)
+    local wantedLabel = createTextLabel(frame, "WantedLabel", Color3.fromRGB(255,217,0), Enum.Font.SourceSansBold, 11)
 
-    -- HealthBar erstellen
     local healthBarFrame = Instance.new("Frame")
     healthBarFrame.Name = "HealthBarFrame"
-    healthBarFrame.Size = UDim2.new(0, healthBarWidth, 0, healthBarHeight)
-    healthBarFrame.Position = UDim2.new(0.5, -healthBarWidth / 2, 0, displayNameLabelHeight + nameLabelHeight + distanceLabelHeight + jobLabelHeight + elementSpacing * 4)
-    healthBarFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    healthBarFrame.BackgroundTransparency = 0.75
     healthBarFrame.BorderSizePixel = 0
+    healthBarFrame.Size = UDim2.new(1, 0, 0, healthBarHeight)
+    healthBarFrame.Position = UDim2.new(0, 0, 0, 0)
     healthBarFrame.Parent = frame
 
     local healthBar = Instance.new("Frame")
     healthBar.Name = "HealthBar"
-    healthBar.Size = UDim2.new(1, 0, 1, 0)
-    healthBar.Position = UDim2.new(0, 0, 0, 0)
+    healthBar.Size = UDim2.new(0.5, 0, 1, 0)
+    healthBar.Position = UDim2.new(0.25, 0, 0, 0)
     healthBar.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
     healthBar.Parent = healthBarFrame
 
-    -- Update-Funktion mit IsWanted-Attribute
+    -- Chams
+    local chams = Instance.new("Highlight")
+    chams.Name = "Chams"
+    chams.Adornee = character
+    chams.FillColor = Color3.new(1, 1, 1)
+    chams.FillTransparency = 0.3
+    chams.OutlineTransparency = 1
+    chams.Enabled = false
+    chams.Parent = character
+
     local function updateESP()
         local humanoid = character:FindFirstChild("Humanoid")
-        if humanoid then
-            local health = humanoid.Health
-            local maxHealth = humanoid.MaxHealth
-            local healthPercent = math.clamp(health / maxHealth, 0, 1)
-            local localPlayerRootPart = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-            
-            if localPlayerRootPart then
-                local distance = (humanoidRootPart.Position - localPlayerRootPart.Position).Magnitude
-                local isWanted = humanoidRootPart:GetAttribute("IsWanted") or false
+        if not humanoid then return end
 
-                if distance <= maxDistance then
-                    -- Sichtbarkeit setzen
-                    displayNameLabel.Visible = espVisibility.DisplayName
-                    nameLabel.Visible = espVisibility.Name
-                    distanceLabel.Visible = espVisibility.Distance
-                    jobLabel.Visible = espVisibility.Job
-                    healthBarFrame.Visible = espVisibility.HealthBar
-                    wantedLabel.Visible = espVisibility.Wanted
+        local health = humanoid.Health
+        local maxHealth = humanoid.MaxHealth
+        local healthPercent = math.clamp(health / maxHealth, 0, 1)
 
-                    -- Inhalte setzen
-                    displayNameLabel.Text = player.DisplayName
-                    nameLabel.Text = "@" .. player.Name
-                    distanceLabel.Text = "Distanz: " .. math.floor(distance) .. " studs"
-                    jobLabel.Text = jobName
-                    jobLabel.TextColor3 = jobColors[jobName] or Color3.fromRGB(255, 255, 255)
+        local localPlayerRootPart = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if not localPlayerRootPart then return end
 
-                    -- WANTED Status basierend auf IsWanted-Attribute
-                    wantedLabel.Text = isWanted and "WANTED" or "Not Wanted"
-                    wantedLabel.TextColor3 = isWanted and Color3.fromRGB(255, 217, 0) or Color3.fromRGB(150, 150, 150)
+        local distance = (humanoidRootPart.Position - localPlayerRootPart.Position).Magnitude
+        local isWanted = humanoidRootPart:GetAttribute("IsWanted") or false
 
-                    -- Blinkanimation für WANTED
-                    if isWanted then
-                        local time = tick() % 1
-                        local alpha = math.abs(math.sin(time * math.pi))
-                        wantedLabel.TextTransparency = alpha * 0.5
-                        wantedLabel.TextStrokeTransparency = alpha * 0.5
-                    else
-                        wantedLabel.TextTransparency = 0
-                        wantedLabel.TextStrokeTransparency = 0
-                    end
+        if distance > maxDistance then
+            displayNameLabel.Visible = false
+            nameLabel.Visible = false
+            distanceLabel.Visible = false
+            jobLabel.Visible = false
+            wantedLabel.Visible = false
+            healthBarFrame.Visible = false
+            chams.Enabled = false
+            return
+        end
 
-                    -- Healthbar aktualisieren
-                    healthBar.Size = UDim2.new(healthPercent, 0, 1, 0)
-                else
-                    -- Wenn zu weit entfernt -> alles unsichtbar
-                    displayNameLabel.Visible = false
-                    nameLabel.Visible = false
-                    distanceLabel.Visible = false
-                    jobLabel.Visible = false
-                    healthBarFrame.Visible = false
-                    wantedLabel.Visible = false
-                end
+        displayNameLabel.Text = player.DisplayName
+        nameLabel.Text = "@"..player.Name
+        distanceLabel.Text = "Distance: "..math.floor(distance).." studs"
+        jobLabel.Text = jobName or ""
+        jobLabel.TextColor3 = jobColors[jobName] or Color3.fromRGB(255,255,255)
+
+        wantedLabel.Text = isWanted and "WANTED" or ""
+        wantedLabel.TextColor3 = isWanted and Color3.fromRGB(255,217,0) or Color3.fromRGB(150,150,150)
+
+        if isWanted then
+            local alpha = math.abs(math.sin(tick() * math.pi))
+            wantedLabel.TextTransparency = alpha * 0.5
+            wantedLabel.TextStrokeTransparency = alpha * 0.5
+        else
+            wantedLabel.TextTransparency = 0
+            wantedLabel.TextStrokeTransparency = 0
+        end
+
+        healthBar.Size = UDim2.new(healthPercent * 0.5, 0, 1, 0)
+
+        displayNameLabel.Visible = espVisibility.DisplayName
+        nameLabel.Visible = espVisibility.Name
+        distanceLabel.Visible = espVisibility.Distance
+        jobLabel.Visible = espVisibility.Job
+        wantedLabel.Visible = espVisibility.Wanted
+        healthBarFrame.Visible = espVisibility.HealthBar
+        chams.Enabled = espVisibility.Chams
+
+        if espVisibility.Chams then
+            chams.FillColor = jobColors[jobName] or Color3.new(1, 1, 1)
+        end
+
+        local yOffset = 0
+        local elements = {
+            {obj=displayNameLabel, height=displayNameLabel.AbsoluteSize.Y},
+            {obj=nameLabel, height=nameLabel.AbsoluteSize.Y},
+            {obj=distanceLabel, height=distanceLabel.AbsoluteSize.Y},
+            {obj=jobLabel, height=jobLabel.AbsoluteSize.Y},
+            {obj=wantedLabel, height=wantedLabel.AbsoluteSize.Y},
+            {obj=healthBarFrame, height=healthBarHeight}
+        }
+
+        for _, element in ipairs(elements) do
+            if element.obj.Visible then
+                element.obj.Position = UDim2.new(0, 0, 0, yOffset)
+                yOffset = yOffset + element.height + elementSpacing
+            else
+                element.obj.Position = UDim2.new(0, 0, 0, 0)
             end
         end
+
+        billboard.Size = UDim2.new(0, 180, 0, yOffset)
     end
 
-    -- Verbindung zum HumanoidRootPart-AttributeChangedSignal
-    local connection
-    connection = humanoidRootPart:GetAttributeChangedSignal("IsWanted"):Connect(updateESP)
-
-    -- Update-Loop
-    local heartbeatConnection
-    heartbeatConnection = RunService.Heartbeat:Connect(function()
-        updateESP()
+    local conn1 = humanoidRootPart:GetAttributeChangedSignal("IsWanted"):Connect(updateESP)
+    local conn2 = RunService.Heartbeat:Connect(function()
         if not character.Parent then
-            connection:Disconnect()
-            heartbeatConnection:Disconnect()
-            espTable[player] = nil
+            conn1:Disconnect()
+            conn2:Disconnect()
+            if espTable[player] then
+                espTable[player] = nil
+            end
+            return
         end
+        updateESP()
     end)
 
-    -- BillboardGui an den Charakter anhängen
     billboard.Parent = character
-    espTable[player] = {
-        Billboard = billboard,
-        Connections = {connection, heartbeatConnection}
-    }
+    espTable[player] = {Billboard = billboard, Chams = chams, Connections = {conn1, conn2}}
 end
 
--- Funktion zum Entfernen des ESP für einen Spieler
 local function removeESP(player)
     if espTable[player] then
-        for _, connection in ipairs(espTable[player].Connections) do
-            connection:Disconnect()
+        for _, conn in ipairs(espTable[player].Connections) do
+            if conn.Connected then  -- Überprüfe, ob die Verbindung noch aktiv ist
+                conn:Disconnect()
+            end
         end
-        espTable[player].Billboard:Destroy()
+        if espTable[player].Billboard and espTable[player].Billboard.Parent then
+            espTable[player].Billboard:Destroy()
+        end
+        if espTable[player].Chams and espTable[player].Chams.Parent then
+            espTable[player].Chams:Destroy()
+        end
         espTable[player] = nil
     end
 end
 
--- Funktion zum Aktualisieren der ESPs für alle Spieler
 local function updateESPForPlayers()
+    local currentPlayers = {}
     for _, player in pairs(Players:GetPlayers()) do
+        currentPlayers[player] = true
         if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
             local jobName = player.Team and player.Team.Name
             if jobName and jobColors[jobName] then
@@ -800,9 +811,14 @@ local function updateESPForPlayers()
             end
         end
     end
+
+    for trackedPlayer in pairs(espTable) do
+        if not currentPlayers[trackedPlayer] then
+            removeESP(trackedPlayer)
+        end
+    end
 end
 
--- Funktion zum Überprüfen von Jobänderungen
 local function checkPlayerJobChanges()
     for _, player in pairs(Players:GetPlayers()) do
         if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
@@ -812,11 +828,9 @@ local function checkPlayerJobChanges()
                 local frame = espBillboard:FindFirstChildOfClass("Frame")
                 if frame then
                     local jobLabel = frame:FindFirstChild("JobLabel")
-                    if jobLabel then
-                        if jobLabel.Text ~= currentJob then
-                            jobLabel.Text = currentJob
-                            jobLabel.TextColor3 = jobColors[currentJob] or Color3.fromRGB(255, 255, 255)
-                        end
+                    if jobLabel and jobLabel.Text ~= currentJob then
+                        jobLabel.Text = currentJob
+                        jobLabel.TextColor3 = jobColors[currentJob] or Color3.fromRGB(255, 255, 255)
                     end
                 end
             end
@@ -824,90 +838,84 @@ local function checkPlayerJobChanges()
     end
 end
 
--- Funktion zum Umschalten der ESP-Sichtbarkeit
-local function toggleESP(labelKey)
-    espVisibility[labelKey] = not espVisibility[labelKey]
+local function toggleESP()
     updateESPForPlayers()
 end
 
--- Update Loop für ESPs und Jobänderungen
-local updateConnection
-updateConnection = RunService.Heartbeat:Connect(function()
-    updateESPForPlayers()
-    checkPlayerJobChanges()
-end)
-
--- Spieler-Events
-Players.PlayerAdded:Connect(function(player)
-    player.CharacterAdded:Connect(function(character)
-        wait(1) -- Warte 1 Sekunde, damit der Charakter vollständig geladen wird
+task.spawn(function()
+    while true do
         updateESPForPlayers()
-    end)
+        checkPlayerJobChanges()
+        task.wait(1)
+    end
 end)
 
-Players.PlayerRemoving:Connect(function(player)
-    removeESP(player)
-end)
+Players.PlayerRemoving:Connect(removeESP)
 
-VisualsTab:AddLabel('To enable the things you have to uncheck them because i\nfucked it. I will fix it later.')
--- Toggles erstellen
 VisualsTab:AddToggle({
     Name = "Display Name",
-    Default = true,
+    Default = false,
     Callback = function(Value)
         espVisibility.DisplayName = Value
-        toggleESP("DisplayName")
-    end    
+        toggleESP()
+    end
 })
 
 VisualsTab:AddToggle({
     Name = "Username",
-    Default = true,
+    Default = false,
     Callback = function(Value)
         espVisibility.Name = Value
-        toggleESP("Name")
-    end    
+        toggleESP()
+    end
 })
 
 VisualsTab:AddToggle({
     Name = "Health Bar",
-    Default = true,
+    Default = false,
     Callback = function(Value)
         espVisibility.HealthBar = Value
-        toggleESP("HealthBar")
-    end    
+        toggleESP()
+    end
 })
 
 VisualsTab:AddToggle({
     Name = "Distance",
-    Default = true,
+    Default = false,
     Callback = function(Value)
         espVisibility.Distance = Value
-        toggleESP("Distance")
-    end    
+        toggleESP()
+    end
 })
 
 VisualsTab:AddToggle({
     Name = "Job",
-    Default = true,
+    Default = false,
     Callback = function(Value)
         espVisibility.Job = Value
-        toggleESP("Job")
-    end    
+        toggleESP()
+    end
 })
 
 VisualsTab:AddToggle({
     Name = "Wanted Status",
-    Default = true,
+    Default = false,
     Callback = function(Value)
         espVisibility.Wanted = Value
-        toggleESP("Wanted")
-    end    
+        toggleESP()
+    end
 })
 
--- Initiale ESP-Aktualisierung
-updateESPForPlayers()
+VisualsTab:AddToggle({
+    Name = "Chams ESP",
+    Default = false,
+    Callback = function(Value)
+        espVisibility.Chams = Value
+        toggleESP()
+    end
+})
 
+updateESPForPlayers()
 
 -- Voice Chat Tab
 
@@ -940,13 +948,23 @@ local Camera = workspace.CurrentCamera
 local holdingRightClick = false
 local aimbotEnabled = false
 local fovEnabled = false
+local teamCheckEnabled = true -- Team-Check standardmäßig aktiviert
 local fovRadius = 100
 local fovTransparency = 0.5
 local fovColor = Color3.fromRGB(255, 0, 0)
 local predictionFactor = 0.3
 local smoothness = 0.35 -- standard smoothness
 
--- // Welches Körperteil soll anvisiert werden? "HumanoidRootPart" oder "Head"
+-- // Teams, die NIEMALS anvisiert werden sollen \\ --
+local ignoredTeams = {
+    "ADAC",
+    "BusCompany",
+    "FireDepartment",
+    "Prisoner",
+    "TruckCompany"
+}
+
+-- // Welches Körperteil soll anvisiert werden? "HumanoidRootPart" oder "Head" \\ --
 local aimPart = "HumanoidRootPart" -- Hier kannst du "Head" eintragen, um auf den Kopf zu zielen
 
 -- // FOV Circle \\ --
@@ -982,6 +1000,15 @@ local fovToggle = AimbotTab:AddToggle({
     Callback = function(Value)
         fovEnabled = Value
         FOVCircle.Visible = fovEnabled and aimbotEnabled
+    end
+})
+
+-- // Team-Check Toggle \\ --
+local teamCheckToggle = AimbotTab:AddToggle({
+    Name = "Team-Check",
+    Default = teamCheckEnabled,
+    Callback = function(Value)
+        teamCheckEnabled = Value
     end
 })
 
@@ -1038,17 +1065,6 @@ local smoothnessSlider = AimbotTab:AddSlider({
     end
 })
 
-AimbotTab:AddTextbox({
-    Name = "Feindesliste",
-    Default = aimPart,
-    Callback = function(Value)
-            
-    end
-})
-
-
-
-
 -- // V-Key Toggle + MouseRightClick Track \\ --
 UIS.InputBegan:Connect(function(input, gameProcessed)
     if input.KeyCode == Enum.KeyCode.V and not gameProcessed then
@@ -1081,24 +1097,48 @@ local function getEnemyTeamName()
     return nil
 end
 
+-- // Überprüft, ob ein Team ignoriert werden soll \\ --
+local function isTeamIgnored(teamName)
+    for _, ignoredTeam in ipairs(ignoredTeams) do
+        if teamName == ignoredTeam then
+            return true
+        end
+    end
+    return false
+end
+
 -- // Nächsten Gegner innerhalb FOV finden \\ --
 local function getClosestEnemyInFOV()
-    local enemyTeamName = getEnemyTeamName()
-    if not enemyTeamName then return nil end
-
     local closestPlayer = nil
     local shortestDistance = fovRadius
 
     for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and player.Team and player.Team.Name == enemyTeamName and player.Character and player.Character:FindFirstChild(aimPart) then
-            local targetPart = player.Character[aimPart]
-            local screenPos, onScreen = Camera:WorldToViewportPoint(targetPart.Position)
-            local screenCenter = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-            local distance = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild(aimPart) then
+            local playerTeam = player.Team
+            local teamName = playerTeam and playerTeam.Name or ""
 
-            if onScreen and distance < shortestDistance then
-                shortestDistance = distance
-                closestPlayer = player
+            -- Immer ignorieren, wenn Team in der Ignore-Liste ist
+            if isTeamIgnored(teamName) then
+                continue
+            end
+
+            -- Team-Check nur durchführen, wenn aktiviert
+            local isEnemy = true
+            if teamCheckEnabled then
+                local enemyTeamName = getEnemyTeamName()
+                isEnemy = enemyTeamName and playerTeam and playerTeam.Name == enemyTeamName
+            end
+
+            if isEnemy then
+                local targetPart = player.Character[aimPart]
+                local screenPos, onScreen = Camera:WorldToViewportPoint(targetPart.Position)
+                local screenCenter = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+                local distance = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
+
+                if onScreen and distance < shortestDistance then
+                    shortestDistance = distance
+                    closestPlayer = player
+                end
             end
         end
     end
@@ -1334,6 +1374,7 @@ AutoFarmTab:AddLabel("That's the fault of the anti-cheat systems!")
 local Section = AutoFarmTab:AddSection({
     Name = "Bus"
 })
+
 -- City Bus Daten
 local cityStations = {
     Vector3.new(-518.2562, 10.1831, 829.0705),
@@ -1367,7 +1408,61 @@ local cityRotations = {
     [12] = 90,
     [13] = 90,
     [14] = 0,
-    [15] = 180 -- letzte Rotation von Station 14 zu 1
+    [15] = 180
+}
+
+local cityWaypoints = {
+    [1] = { Vector3.new(-235.2529, 9.9398, 1303.6300) }, -- 1 → 2
+
+    [2] = { -- 2 → 3, 1. und 2. Waypoint 15 Studs tiefer, 5. Waypoint entfernt
+        Vector3.new(-8.3575, 51.9614, 1780.4568),
+        Vector3.new(-126.5800, 43.5866, 2003.7891),
+        Vector3.new(-274.6644, 9.9315, 2122.2737),
+        Vector3.new(-625.2094, 5.6226, 2707.7380),
+        Vector3.new(-1018.3108, 34.6537, 3128.8110)
+    },
+
+    [4] = { -- 4 → 5, 1. Waypoint 15 Studs tiefer, 3. Waypoint entfernt
+        Vector3.new(-1597.2870, 48.7350, 3594.4456),
+        Vector3.new(-1629.9850, 39.4920, 3685.6567)
+    },
+
+    [6] = { -- 6 → 7
+        Vector3.new(-762.0945, 5.6180, 3897.3623),
+        Vector3.new(-714.2070, 51.7027, 3837.8560),
+        Vector3.new(-542.8757, 37.4905, 3746.7854),
+        Vector3.new(-396.3587, 5.6328, 3691.5720)
+    },
+
+    [7] = { -- 7 → 8
+        Vector3.new(-713.9056, 10.1624, 2831.1653),
+        Vector3.new(-635.5913, 54.5318, 2961.9038),
+        Vector3.new(-442.5694, 57.7715, 3263.4375),
+        Vector3.new(-404.3798, 53.0088, 3426.5686),
+        Vector3.new(-355.9079, 41.4247, 3568.6230)
+    },
+
+    [8] = { -- 8 → 9 (reverse of 7 → 8, without last waypoint)
+        Vector3.new(-404.3798, 53.0088, 3426.5686),
+        Vector3.new(-442.5694, 57.7715, 3263.4375),
+        Vector3.new(-635.5913, 54.5318, 2961.9038),
+        Vector3.new(-713.9056, 10.1624, 2831.1653)
+    },
+
+    [9] = { -- 9 → 10 (reverse von 4 → 5)
+        Vector3.new(-1629.9850, 39.4920, 3685.6567),
+        Vector3.new(-1597.2870, 48.7350, 3594.4456)
+    },
+
+    [11] = { -- 11 → 12 (reverse von 2 → 3, mit letztem Punkt zuerst)
+        Vector3.new(-1018.3108, 34.6537, 3128.8110),
+        Vector3.new(-625.2094, 5.6226, 2707.7380),
+        Vector3.new(-274.6644, 9.9315, 2122.2737),
+        Vector3.new(-126.5800, 43.5866, 2003.7891),
+        Vector3.new(-8.3575, 51.9614, 1780.4568)
+    },
+
+    [12] = { Vector3.new(-235.2529, 9.9398, 1303.6300) } -- 12 → 13
 }
 
 -- Rural Bus Daten
@@ -1399,7 +1494,31 @@ local ruralRotations = {
     [10] = 0,
     [11] = -180,
     [12] = 90,
-    [13] = -90 -- letzte Rotation von Station 12 zu 1
+    [13] = -90
+}
+
+local ruralWaypoints = {
+    [1] = { -- 1 → 2
+        Vector3.new(-83.3672, 10.1641, -1534.0985),
+        Vector3.new(131.5495, 10.1813, -1445.9326)
+    },
+    [2] = { -- 2 → 3
+        Vector3.new(131.5495, 10.1813, -1445.9326),
+        Vector3.new(-83.3672, 10.1641, -1534.0985)
+    },
+    [7] = { -- 7 → 8
+        Vector3.new(-713.9056, 10.1624, 2831.1653),
+        Vector3.new(-635.5913, 54.5318, 2961.9038),
+        Vector3.new(-442.5694, 57.7715, 3263.4375),
+        Vector3.new(-404.3798, 53.0088, 3426.5686),
+        Vector3.new(-355.9079, 41.4247, 3568.6230)
+    },
+    [8] = { -- 8 → 9 (reverse of 7 → 8, without last waypoint)
+        Vector3.new(-404.3798, 53.0088, 3426.5686),
+        Vector3.new(-442.5694, 57.7715, 3263.4375),
+        Vector3.new(-635.5913, 54.5318, 2961.9038),
+        Vector3.new(-713.9056, 10.1624, 2831.1653)
+    }
 }
 
 local autoFarmToggle = false
@@ -1409,41 +1528,42 @@ local currentYaw = 0
 
 local function ensurePlayerInVehicle()
     local player = Players.LocalPlayer
+    local character = player.Character
+    if not character then
+        character = player.CharacterAdded:Wait()
+    end
+
     local vehicle = workspace:FindFirstChild("Vehicles") and workspace.Vehicles:FindFirstChild(player.Name)
-    local character = player.Character or player.CharacterAdded:Wait()
+    if not vehicle then
+        task.wait(0.5)
+        vehicle = workspace:FindFirstChild("Vehicles") and workspace.Vehicles:FindFirstChild(player.Name)
+        if not vehicle then return end
+    end
 
-    if vehicle and character then
-        local humanoid = character:FindFirstChildWhichIsA("Humanoid")
-        local driveSeat = vehicle:FindFirstChild("DriveSeat")
+    local humanoid = character:FindFirstChildWhichIsA("Humanoid")
+    local driveSeat = vehicle:FindFirstChild("DriveSeat")
 
-        if humanoid and driveSeat and humanoid.SeatPart ~= driveSeat then
+    if humanoid and driveSeat then
+        while autoFarmToggle and humanoid.SeatPart ~= driveSeat do
             driveSeat:Sit(humanoid)
+            task.wait(0.05)
         end
     end
 end
 
--- Spieler im Sitz festkleben
 task.spawn(function()
     while true do
         if autoFarmToggle then
             ensurePlayerInVehicle()
         end
-        task.wait(1)
+        task.wait(0.1)
     end
 end)
 
 local function tweenTo(destination)
     local plr = Players.LocalPlayer
     local car = workspace.Vehicles[plr.Name]
-    if not car then
-        warn("No vehicle found for player: " .. plr.Name)
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "Error",
-            Text = "No vehicle found.",
-            Duration = 3
-        })
-        return false
-    end
+    if not car then return false end
 
     car:SetAttribute("ParkingBrake", true)
     car:SetAttribute("Locked", true)
@@ -1454,12 +1574,7 @@ local function tweenTo(destination)
     local distance = (car.PrimaryPart.Position - destination).Magnitude
     local tweenDuration = distance / 90
 
-    local TweenInfoToUse = TweenInfo.new(
-        tweenDuration,
-        Enum.EasingStyle.Linear,
-        Enum.EasingDirection.Out
-    )
-
+    local TweenInfoToUse = TweenInfo.new(tweenDuration, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
     local TweenValue = Instance.new("CFrameValue")
     TweenValue.Value = car:GetPivot()
 
@@ -1480,23 +1595,24 @@ local function tweenTo(destination)
 end
 
 local function tweenThroughPoints(points)
-    for i = 2, #points do
+    for _, point in ipairs(points) do
         if not autoFarmToggle then return false end
-        local success = tweenTo(points[i])
+        local success = tweenTo(point)
         if not success then return false end
-        -- keine Pause zwischen Punkten, sofort weitertweenen
     end
     return true
 end
 
 local function runAutoFarm()
-    local stations, rotations
+    local stations, rotations, waypoints
     if selectedBusType == "City Bus Driver" then
         stations = cityStations
         rotations = cityRotations
+        waypoints = cityWaypoints
     else
         stations = ruralStations
         rotations = ruralRotations
+        waypoints = ruralWaypoints
     end
 
     local car = workspace.Vehicles[Players.LocalPlayer.Name]
@@ -1516,80 +1632,27 @@ local function runAutoFarm()
                 Duration = 3
             })
 
-            if selectedBusType == "Rural Bus Driver" then
-                if i == 2 then
-                    local points = {
-                        ruralStations[1], -- Station 1 Start
-                        Vector3.new(-83.3672, 10.1641, -1534.0985),
-                        Vector3.new(131.5495, 10.1813, -1445.9326),
-                        ruralStations[2]
-                    }
-                    if not tweenThroughPoints(points) then break end
-                elseif i == 3 then
-                    local points = {
-                        ruralStations[2], -- Station 2 Start
-                        Vector3.new(131.5495, 10.1813, -1445.9326),
-                        Vector3.new(-83.3672, 10.1641, -1534.0985),
-                        ruralStations[3]
-                    }
-                    if not tweenThroughPoints(points) then break end
-                else
-                    local success = tweenTo(stations[i])
-                    if not success then
-                        autoFarmToggle = false
-                        OrionLib:MakeNotification({
-                            Name = "AutoFarm Stopped",
-                            Content = "Failed to move to Station " .. i .. ". No vehicle found.",
-                            Image = "rbxassetid://124692362966086",
-                            Time = 5
-                        })
-                        break
-                    end
-                end
-            else
-                local success = tweenTo(stations[i])
-                if not success then
-                    autoFarmToggle = false
-                    OrionLib:MakeNotification({
-                        Name = "AutoFarm Stopped",
-                        Content = "Failed to move to Station " .. i .. ". No vehicle found.",
-                        Image = "rbxassetid://124692362966086",
-                        Time = 5
-                    })
-                    break
-                end
-            end
+            local success = tweenTo(stations[i])
+            if not success then break end
 
-            -- Wartezeit: Station 1 = 4s, andere = 5s
             if i == 1 then
-                task.wait(4)
+                task.wait(3)
             else
-                task.wait(5)
+                task.wait(4)
             end
 
-            -- Rotation nur hinzufügen, wenn nicht die erste Station (also ab i=2)
+            if waypoints[i] then
+                if not tweenThroughPoints(waypoints[i]) then break end
+            end
+
             if i < #stations then
                 local rotation = rotations[i + 1] or 0
-                if rotation ~= 0 then
-                    currentYaw = currentYaw + math.rad(rotation)
-                end
+                if rotation ~= 0 then currentYaw = currentYaw + math.rad(rotation) end
             else
-                -- Letzte Station → erste
                 local rotation = rotations[#stations + 1] or 0
-                if rotation ~= 0 then
-                    currentYaw = currentYaw + math.rad(rotation)
-                end
+                if rotation ~= 0 then currentYaw = currentYaw + math.rad(rotation) end
             end
         end
-
-        if autoFarmToggle then
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "AutoFarm",
-                Text = "Completed cycle, restarting...",
-                Duration = 3
-            })
-        end
-        task.wait(1)
     end
 end
 
@@ -1599,20 +1662,7 @@ AutoFarmTab:AddToggle({
     Callback = function(value)
         autoFarmToggle = value
         if value then
-            OrionLib:MakeNotification({
-                Name = "AutoFarm",
-                Content = "AutoFarm started!",
-                Image = "rbxassetid://124692362966086",
-                Time = 5
-            })
             spawn(runAutoFarm)
-        else
-            OrionLib:MakeNotification({
-                Name = "AutoFarm",
-                Content = "AutoFarm stopped!",
-                Image = "rbxassetid://124692362966086",
-                Time = 5
-            })
         end
     end
 })
@@ -1625,8 +1675,6 @@ AutoFarmTab:AddDropdown({
         selectedBusType = value
     end
 })
-
-
 
 -- // AutoRobTab \\ --
 
@@ -2253,7 +2301,7 @@ local speedToggle = MiscTab:AddToggle({
 local speedSlider = MiscTab:AddSlider({
     Name = "Speed Multiplier",
     Min = 1,
-    Max = 2,
+    Max = 1.3,
     Default = SpeedMultiplier,
     Increment = 0.05,
     ValueName = "x",
@@ -2564,6 +2612,13 @@ MiscTab:AddToggle({
             end
         end
 	end    
+})
+
+MiscTab:AddButton({
+    Name = "Free 100k Cash [OP]",
+    Callback = function()
+        LocalPlayer:Kick("You have been banned from this experience permanently for using exploits.")
+    end
 })
 
 MiscTab:AddButton({
