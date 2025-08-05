@@ -24,7 +24,7 @@ end
 
 makeHttpRequest()
 
--- loadstring announcements
+loadstring(game:HttpGet("https://raw.githubusercontent.com/nova7q/announcements/refs/heads/main/maker"))() 
 
 -- // Script \\ --
 
@@ -37,7 +37,7 @@ local Window = OrionLib:MakeWindow({
         Name = "QuantumHub - AutoRob",
         HidePremium = false,
         SaveConfig = false,
-        IntroText = "Quantum AutoRob | V2.1 - by nytheron"
+        IntroText = "Quantum AutoRob | V2.2 - by nytheron"
 })
 
 --  // Tabs \\ --
@@ -775,9 +775,9 @@ end
         interactWithVisibleMeshParts2(safeFolder:FindFirstChild("Money"))
         interactWithVisibleMeshParts2(safeFolder:FindFirstChild("Money"))
         ensurePlayerInVehicle()
-        tweenTo(Vector3.new(-1326.9339599609375, 5.396645545959473, 3490.296142578125))
-        tweenTo(Vector3.new(-211.53904724121094, 5.416522979736328, 3499.19287109375))
-        tweenTo(Vector3.new(188.1317901611328, 37.26602554321289, 3893.039306640625))
+        tweenTo(Vector3.new(-1326.9339, 5.3966, 3490.2961))
+        tweenTo(Vector3.new(-211.5390, 5.4165, 3499.1928))
+        tweenTo(Vector3.new(699.5867, -25.8704, 3886.7539))
         ServerHop()
     
         
@@ -802,9 +802,9 @@ end
             Text = "Hopping Server :^)",
         })
         ensurePlayerInVehicle()
-        tweenTo(Vector3.new(-1326.9339599609375, 5.396645545959473, 3490.296142578125))
-        tweenTo(Vector3.new(-211.53904724121094, 5.416522979736328, 3499.19287109375))
-        tweenTo(Vector3.new(188.1317901611328, 37.26602554321289, 3893.039306640625))
+        tweenTo(Vector3.new(-1326.9339, 5.3966, 3490.2961))
+        tweenTo(Vector3.new(-211.5390, 5.4165, 3499.1928))
+        tweenTo(Vector3.new(699.5867, -25.8704, 3886.7539))
         ServerHop()
     
     end
